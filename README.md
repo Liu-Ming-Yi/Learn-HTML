@@ -16,7 +16,7 @@
 
 | 檔案名稱 / 範例 | 內容簡述 | 使用&查詢的工具 |
 | :---: | :------ | :----: |
-| [Index.html](https://liu-ming-yi.github.io/Learn-HTML/Web-Design-1/index.html)| [使用語法說明](https://liu-ming-yi.github.io/First-code/First-HelloWorld/Introduction-to-tag-syntax.html) | [AI：Gemini]<br>[Refer：Google]<br>[Idea：Owner] |
+| [Index.html](https://liu-ming-yi.github.io/Learn-HTML/Web-Design-1/Index.html)| [使用語法說明](https://liu-ming-yi.github.io/First-code/First-HelloWorld/Introduction-to-tag-syntax.html) | [AI：Gemini]<br>[Refer：Google]<br>[Idea：Owner] |
 | [my-work.html](https://liu-ming-yi.github.io/First-code/images/my-work.Html)| 基礎 `HTML` 結構與 `<img> <title>` 語法 和 `width 和 height` 屬性 | [AI：Gemini] |
 | [color-change.html](https://liu-ming-yi.github.io/First-code/CSS/color-change.html)| 基礎 `HTML` 結構與 `CSS` 語法 和 `color: red;` 屬性 <br> HTML 對對符號非常嚴格`(例如 style="color: red;" 引號、冒號、分號)`<br>使用 style 屬性設定顏色是最快的方式，請確保所有標籤都是成對的!| [AI：Gemini]<br>[Refer：Google]<br>[Refer：Github] |
 | [Interactive.html](https://liu-ming-yi.github.io/First-code/JavaScript/Interactive.html)| 基礎 `HTML` 結構與 `<JavaScript>` 語法 #小遊戲٩(๑•̀ω•́๑)۶ | [AI：Gemini] |
