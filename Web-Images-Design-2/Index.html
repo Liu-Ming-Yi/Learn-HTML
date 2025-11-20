@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>暫時性圖片工作站</title>
+    <title>暫時性圖片工作站 (V2)</title>
     <style>
         :root {
-            --primary-color: #e74c3c; /* 醒目紅色 */
-            --secondary-color: #2c3e50; /* 深藍色 */
+            --upload-color: #2ecc71;   /* 綠色 */
+            --search-color: #3498db;   /* 藍色 */
             --bg-color: #f4f7f6; 
             --card-bg: #ffffff;
             --text-color: #333;
@@ -30,21 +30,21 @@
             text-align: center;
             margin-bottom: 40px;
             padding-bottom: 20px;
-            border-bottom: 3px solid var(--primary-color);
+            border-bottom: 3px solid var(--search-color);
         }
 
         header h1 {
-            color: var(--primary-color);
+            color: var(--search-color);
             margin-bottom: 5px;
         }
 
         /* 警告資訊 */
         .warning-box {
-            background-color: #fce8e6;
-            color: #c0392b;
+            background-color: #fff3cd;
+            color: #856404;
             padding: 15px;
             border-radius: 5px;
-            border: 1px solid #e74c3c;
+            border: 1px solid #ffeeba;
             font-weight: bold;
             text-align: center;
             margin-bottom: 30px;
@@ -66,8 +66,7 @@
         }
 
         .card h3 {
-            color: var(--secondary-color);
-            border-bottom: 2px dashed #ccc;
+            color: var(--text-color);
             padding-bottom: 10px;
         }
 
@@ -78,34 +77,32 @@
 
         .upload-label {
             display: block;
-            border: 3px dashed var(--primary-color);
+            border: 3px dashed var(--upload-color);
             padding: 40px 20px;
             text-align: center;
             cursor: pointer;
             border-radius: 8px;
-            color: var(--primary-color);
+            color: var(--upload-color);
             transition: background-color 0.3s;
         }
 
         .upload-label:hover {
-            background-color: #fef0f0;
+            background-color: #e6f7ef;
         }
 
-        textarea {
+        input[type="text"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             box-sizing: border-box;
             margin-top: 10px;
-            resize: vertical;
         }
 
         .cta-button {
             display: block;
             width: 100%;
             padding: 12px;
-            background-color: var(--secondary-color);
             color: white;
             border: none;
             border-radius: 5px;
@@ -114,14 +111,24 @@
             margin-top: 15px;
             transition: background-color 0.3s;
         }
+        
+        .upload-button {
+            background-color: var(--upload-color);
+        }
+        .upload-button:hover {
+            background-color: #27ad60;
+        }
 
-        .cta-button:hover {
-            background-color: #34495e;
+        .search-button {
+            background-color: var(--search-color);
+        }
+        .search-button:hover {
+            background-color: #2980b9;
         }
 
         /* 圖片庫樣式 */
         .gallery-container h2 {
-            color: var(--secondary-color);
+            color: var(--search-color);
             margin-bottom: 20px;
         }
         
@@ -149,12 +156,12 @@
 
     <div class="container">
         <header>
-            <h1>🖼️ 暫時性圖片工作站</h1>
-            <p>這個頁面上的所有圖片都只會暫時存放在您瀏覽器的記憶體中。</p>
+            <h1>📸 暫時性圖片工作站</h1>
+            <p>圖片只會暫時存放在您當前瀏覽器的記憶體中，關閉或重新整理即消失。</p>
         </header>
 
         <div class="warning-box">
-            🚨 **重要提醒：** 關閉此分頁或重新整理網頁，所有上傳或生成的圖片將**立即消失**，不會被儲存。
+            🚨 **技術限制說明：** 為了確保資料安全，本頁面無法直接呼叫 Google 或 Gemini 的圖片生成 API。網路搜索功能將使用**佔位圖**或**預設圖片**來模擬結果。
         </div>
 
         <div class="tool-area">
@@ -163,14 +170,14 @@
                 <input type="file" id="upload-input" accept="image/*" onchange="uploadImage(this.files[0])">
                 <label for="upload-input" class="upload-label">
                     點擊此處選擇圖片檔案
-                    <p style="font-size: 0.9em; margin-top: 5px;">(圖片只會在您的頁面顯示)</p>
+                    <p style="font-size: 0.9em; margin-top: 5px;">(圖片將由您的瀏覽器記憶體暫存)</p>
                 </label>
             </div>
 
             <div class="card">
-                <h3>🤖 AI 圖片生成 (模擬)</h3>
-                <textarea id="ai-prompt" rows="3" placeholder="輸入描述詞，例如：一隻戴著太陽眼鏡的柴犬，在火星上。"></textarea>
-                <button class="cta-button" onclick="generateImage()">⚡ 生成並顯示圖片</button>
+                <h3>🌐 網路圖片搜索 (模擬)</h3>
+                <input type="text" id="search-prompt" placeholder="輸入要搜索的圖片關鍵詞，例如：未來城市">
+                <button class="cta-button search-button" onclick="searchAndDisplayImage()">🔎 搜索並顯示圖片</button>
             </div>
         </div>
 
@@ -182,47 +189,7 @@
     </div>
 
     <script>
-        // 1. 圖片上傳 (將檔案讀取為 Data URL 儲存在記憶體)
-        function uploadImage(file) {
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                addImageToGallery(e.target.result, file.name);
-            };
-            
-            // 讀取檔案內容為 Data URL (Base64 編碼，存在於記憶體中)
-            reader.readAsDataURL(file); 
-        }
-
-        // 2. 模擬 AI 圖片生成 (使用佔位圖模擬生成結果)
-        function generateImage() {
-            const prompt = document.getElementById('ai-prompt').value;
-            if (prompt.trim() === "") {
-                alert("請輸入 AI 描述詞！");
-                return;
-            }
-            
-            const gallery = document.getElementById('gallery');
-            
-            // 清空輸入框
-            document.getElementById('ai-prompt').value = '';
-
-            // 模擬隨機顏色和內容
-            const colors = ['4CAF50', '2196F3', 'FF9800', '9C27B0'];
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-            const placeholderText = encodeURIComponent(`AI 生成: ${prompt.substring(0, 10)}...`);
-            
-            // 模擬生成一張新圖片 (URL 為模擬圖片)
-            const imageUrl = `https://via.placeholder.com/250/${randomColor}/FFFFFF?text=${placeholderText}`;
-            
-            addImageToGallery(imageUrl, "AI生成");
-
-            // 簡單提示
-            alert(`AI 正在生成圖片... (已模擬添加到圖片庫)`);
-        }
-
-        // 3. 核心功能：將圖片添加到當前頁面
+        // 核心功能：將圖片添加到當前頁面
         function addImageToGallery(imageUrl, altText) {
             const gallery = document.getElementById('gallery');
             
@@ -237,6 +204,57 @@
             
             // 將新圖片加到圖片庫的最前面
             gallery.prepend(newImageItem);
+        }
+
+
+        // 1. 本地圖片上傳功能
+        function uploadImage(file) {
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // 將 Base64 資料傳入顯示函數
+                addImageToGallery(e.target.result, file.name);
+            };
+            
+            // 讀取檔案內容為 Data URL (Base64 編碼)
+            reader.readAsDataURL(file); 
+            alert(`檔案 "${file.name}" 已成功上傳並暫存！`);
+        }
+
+
+        // 2. 網路圖片搜索功能 (模擬)
+        function searchAndDisplayImage() {
+            const prompt = document.getElementById('search-prompt').value;
+            if (prompt.trim() === "") {
+                alert("請輸入搜索關鍵詞！");
+                return;
+            }
+            
+            // 這裡模擬從網路取得一張圖片 URL
+            
+            // 隨機選擇一張高畫質圖片 URL (此為預先搜索到的真實網路圖片 URL，用於模擬)
+            const imageUrls = [
+                "https://storage.googleapis.com/gweb-uniblog-publish-prod/images/hero_image_for_blog_post.max-1300x1300.jpg", 
+                "
+
+http://googleusercontent.com/image_collection/image_retrieval/5075868250596497662_0
+", // 預先搜索的賽博朋克城市
+                "https://picsum.photos/id/237/250/250" // 隨機狗圖片
+            ];
+            
+            const randomIndex = Math.floor(Math.random() * imageUrls.length);
+            const imageUrl = imageUrls[randomIndex];
+
+            // 調整提示文字
+            const displayPrompt = prompt.substring(0, 10);
+            
+            addImageToGallery(imageUrl, `搜索結果: ${displayPrompt}`);
+
+            // 清空輸入框
+            document.getElementById('search-prompt').value = '';
+
+            alert(`正在搜索 "${prompt}"... (已模擬添加到圖片庫)`);
         }
     </script>
 
