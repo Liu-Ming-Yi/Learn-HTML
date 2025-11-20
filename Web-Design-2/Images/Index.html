@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>暫時性圖片工作站</title>
+    <style>
+        :root {
+            --primary-color: #e74c3c; /* 醒目紅色 */
+            --secondary-color: #2c3e50; /* 深藍色 */
+            --bg-color: #f4f7f6; 
+            --card-bg: #ffffff;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: '微軟正黑體', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        /* 警告資訊 */
+        .warning-box {
+            background-color: #fce8e6;
+            color: #c0392b;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #e74c3c;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* 佈局區塊 */
+        .tool-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            color: var(--secondary-color);
+            border-bottom: 2px dashed #ccc;
+            padding-bottom: 10px;
+        }
+
+        /* 上傳與輸入樣式 */
+        #upload-input {
+            display: none;
+        }
+
+        .upload-label {
+            display: block;
+            border: 3px dashed var(--primary-color);
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 8px;
+            color: var(--primary-color);
+            transition: background-color 0.3s;
+        }
+
+        .upload-label:hover {
+            background-color: #fef0f0;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-top: 10px;
+            resize: vertical;
+        }
+
+        .cta-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.05em;
+            margin-top: 15px;
+            transition: background-color 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: #34495e;
+        }
+
+        /* 圖片庫樣式 */
+        .gallery-container h2 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+        
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .image-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>🖼️ 暫時性圖片工作站</h1>
+            <p>這個頁面上的所有圖片都只會暫時存放在您瀏覽器的記憶體中。</p>
+        </header>
+
+        <div class="warning-box">
+            🚨 **重要提醒：** 關閉此分頁或重新整理網頁，所有上傳或生成的圖片將**立即消失**，不會被儲存。
+        </div>
+
+        <div class="tool-area">
+            <div class="card">
+                <h3>📂 本地圖片上傳</h3>
+                <input type="file" id="upload-input" accept="image/*" onchange="uploadImage(this.files[0])">
+                <label for="upload-input" class="upload-label">
+                    點擊此處選擇圖片檔案
+                    <p style="font-size: 0.9em; margin-top: 5px;">(圖片只會在您的頁面顯示)</p>
+                </label>
+            </div>
+
+            <div class="card">
+                <h3>🤖 AI 圖片生成 (模擬)</h3>
+                <textarea id="ai-prompt" rows="3" placeholder="輸入描述詞，例如：一隻戴著太陽眼鏡的柴犬，在火星上。"></textarea>
+                <button class="cta-button" onclick="generateImage()">⚡ 生成並顯示圖片</button>
+            </div>
+        </div>
+
+        <div class="gallery-container">
+            <h2>✨ 我的私人圖片庫</h2>
+            <div id="gallery" class="image-gallery">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. 圖片上傳 (將檔案讀取為 Data URL 儲存在記憶體)
+        function uploadImage(file) {
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                addImageToGallery(e.target.result, file.name);
+            };
+            
+            // 讀取檔案內容為 Data URL (Base64 編碼，存在於記憶體中)
+            reader.readAsDataURL(file); 
+        }
+
+        // 2. 模擬 AI 圖片生成 (使用佔位圖模擬生成結果)
+        function generateImage() {
+            const prompt = document.getElementById('ai-prompt').value;
+            if (prompt.trim() === "") {
+                alert("請輸入 AI 描述詞！");
+                return;
+            }
+            
+            const gallery = document.getElementById('gallery');
+            
+            // 清空輸入框
+            document.getElementById('ai-prompt').value = '';
+
+            // 模擬隨機顏色和內容
+            const colors = ['4CAF50', '2196F3', 'FF9800', '9C27B0'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            const placeholderText = encodeURIComponent(`AI 生成: ${prompt.substring(0, 10)}...`);
+            
+            // 模擬生成一張新圖片 (URL 為模擬圖片)
+            const imageUrl = `https://via.placeholder.com/250/${randomColor}/FFFFFF?text=${placeholderText}`;
+            
+            addImageToGallery(imageUrl, "AI生成");
+
+            // 簡單提示
+            alert(`AI 正在生成圖片... (已模擬添加到圖片庫)`);
+        }
+
+        // 3. 核心功能：將圖片添加到當前頁面
+        function addImageToGallery(imageUrl, altText) {
+            const gallery = document.getElementById('gallery');
+            
+            const newImageItem = document.createElement('div');
+            newImageItem.className = 'image-item';
+            
+            const imgElement = document.createElement('img');
+            imgElement.src = imageUrl;
+            imgElement.alt = altText;
+            
+            newImageItem.appendChild(imgElement);
+            
+            // 將新圖片加到圖片庫的最前面
+            gallery.prepend(newImageItem);
+        }
+    </script>
+
+</body>
+</html>
