@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>精簡版：暫時性圖片工作站</title>
+    <title>圖片上傳工作站 (Pro)</title>
     <style>
         :root {
             --upload-color: #2ecc71;   /* 綠色 */
             --bg-color: #f4f7f6; 
             --card-bg: #ffffff;
             --text-color: #333;
+            --modal-bg: rgba(0, 0, 0, 0.6); /* 模態框背景 */
+            --modal-card-bg: #ffffff;
+            --button-primary: #3498db;
+            --button-hover: #2980b9;
         }
 
         body {
@@ -21,7 +25,7 @@
         }
 
         .container {
-            max-width: 1000px; /* 寬度調整以適應單欄佈局 */
+            max-width: 1000px;
             margin: 0 auto;
         }
 
@@ -37,6 +41,23 @@
             margin-bottom: 5px;
         }
 
+        /* GitHub 連結樣式 */
+        .github-link a {
+            color: var(--button-primary);
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 10px;
+            border: 1px solid var(--button-primary);
+            border-radius: 4px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .github-link a:hover {
+            background-color: var(--button-primary);
+            color: white;
+        }
+
         /* 警告資訊 */
         .warning-box {
             background-color: #fef0f0;
@@ -49,10 +70,10 @@
             margin-bottom: 30px;
         }
 
-        /* 佈局區塊 */
+        /* 上傳卡片 */
         .tool-area {
-            display: flex; /* 改為彈性佈局 */
-            justify-content: center; /* 讓卡片居中 */
+            display: flex;
+            justify-content: center;
             margin-bottom: 40px;
         }
 
@@ -61,8 +82,8 @@
             padding: 25px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            width: 100%; /* 卡片佔滿彈性佈局空間 */
-            max-width: 500px; /* 限制最大寬度 */
+            width: 100%;
+            max-width: 500px;
         }
 
         .card h3 {
@@ -110,12 +131,120 @@
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
-
         .image-item img {
             width: 100%;
             height: auto;
             display: block;
+            object-fit: cover;
+        }
+        /* 不同的圖片比例將應用不同的高度 */
+        .image-item.aspect-original img { height: auto; }
+        .image-item.aspect-1-1 img { aspect-ratio: 1 / 1; }
+        .image-item.aspect-4-3 img { aspect-ratio: 4 / 3; }
+        .image-item.aspect-16-9 img { aspect-ratio: 16 / 9; }
+
+        /* 模態框 (Modal) 樣式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: var(--modal-bg);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--modal-card-bg);
+            margin: auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            transform: translateY(-50px);
+            opacity: 0;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+        .modal.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-content h3 {
+            color: var(--button-primary);
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .modal-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            display: block;
+            margin: 0 auto 20px auto;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            object-fit: contain;
+        }
+
+        .aspect-ratio-buttons button {
+            background-color: #eee;
+            color: var(--text-color);
+            border: 1px solid #ccc;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .aspect-ratio-buttons button:hover {
+            background-color: #ddd;
+            border-color: #aaa;
+        }
+
+        .aspect-ratio-buttons button.selected {
+            background-color: var(--button-primary);
+            color: white;
+            border-color: var(--button-primary);
+        }
+
+        .modal-actions {
+            margin-top: 25px;
+        }
+
+        .modal-actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 0 5px;
+        }
+
+        .modal-actions .confirm-btn {
+            background-color: var(--upload-color);
+            color: white;
+        }
+        .modal-actions .confirm-btn:hover {
+            background-color: #27ad60;
+        }
+
+        .modal-actions .cancel-btn {
+            background-color: #ccc;
+            color: var(--text-color);
+        }
+        .modal-actions .cancel-btn:hover {
+            background-color: #bbb;
         }
     </style>
 </head>
@@ -123,9 +252,15 @@
 
     <div class="container">
         <header>
-            <h1>🖼️ 本地圖片上傳工作站</h1>
-            <p>簡單、私密。所有圖片僅在您當前分頁的記憶體中存在，關閉即清除。</p>
-        </header>
+            <h1>🖼️ 圖片上傳工作站 (Pro)</h1>
+            <p>上傳您的圖片（包含 GIF），並選擇顯示比例。圖片僅在您當前分頁記憶體中，關閉即清除。</p>
+            
+            <p class="github-link">
+                <a href="https://liu-ming-yi.github.io/Learn-HTML/" target="_blank">
+                    🔗 返回 GitHub 專案
+                </a>
+            </p>
+            </header>
 
         <div class="warning-box">
             🔴 **重要提示：** 這個網頁不會儲存任何數據。請勿將此視為檔案備份工具。
@@ -133,11 +268,11 @@
 
         <div class="tool-area">
             <div class="card">
-                <h3>點擊上傳本地圖片</h3>
-                <input type="file" id="upload-input" accept="image/*" onchange="uploadImage(this.files[0])">
+                <h3>點擊上傳圖片</h3>
+                <input type="file" id="upload-input" accept="image/*" onchange="handleFileUpload(this.files[0])">
                 <label for="upload-input" class="upload-label">
                     點擊此處選擇圖片檔案
-                    <p style="font-size: 0.9em; margin-top: 5px;">(圖片將由您的瀏覽器記憶體暫存)</p>
+                    <p style="font-size: 0.9em; margin-top: 5px;">(支援 JPG, PNG, GIF 等格式)</p>
                 </label>
             </div>
         </div>
@@ -149,13 +284,36 @@
         </div>
     </div>
 
+    <div id="aspectRatioModal" class="modal">
+        <div class="modal-content">
+            <h3>選擇圖片顯示比例</h3>
+            <div class="modal-preview">
+                <img id="modalPreviewImage" src="#" alt="圖片預覽">
+            </div>
+            <div class="aspect-ratio-buttons">
+                <button data-aspect="original" class="selected">原始比例</button>
+                <button data-aspect="1-1">1:1 正方形</button>
+                <button data-aspect="4-3">4:3 (經典)</button>
+                <button data-aspect="16-9">16:9 (寬螢幕)</button>
+            </div>
+            <div class="modal-actions">
+                <button class="confirm-btn" onclick="confirmAspectRatio()">確定</button>
+                <button class="cancel-btn" onclick="cancelAspectRatio()">取消</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        let currentUploadedImage = null; // 儲存當前上傳的圖片 Data URL
+        let currentSelectedAspect = 'original'; // 儲存當前選擇的比例
+
         // 核心功能：將圖片添加到當前頁面
-        function addImageToGallery(imageUrl, altText) {
+        function addImageToGallery(imageUrl, altText, aspectRatioClass) {
             const gallery = document.getElementById('gallery');
             
             const newImageItem = document.createElement('div');
-            newImageItem.className = 'image-item';
+            // 添加比例類別
+            newImageItem.className = `image-item ${aspectRatioClass}`; 
             
             const imgElement = document.createElement('img');
             imgElement.src = imageUrl;
@@ -167,22 +325,82 @@
             gallery.prepend(newImageItem);
         }
 
-        // 1. 本地圖片上傳功能
-        function uploadImage(file) {
+        // 處理檔案上傳，並顯示模態框
+        function handleFileUpload(file) {
             if (!file) return;
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                // 將 Base64 資料傳入顯示函數
-                addImageToGallery(e.target.result, file.name);
+                currentUploadedImage = e.target.result; // 儲存 Data URL
+                
+                // 顯示模態框並載入預覽圖
+                const modal = document.getElementById('aspectRatioModal');
+                const modalPreviewImage = document.getElementById('modalPreviewImage');
+                modalPreviewImage.src = currentUploadedImage;
+                
+                // 重置選擇的比例為原始比例，並更新按鈕樣式
+                currentSelectedAspect = 'original';
+                const buttons = modal.querySelectorAll('.aspect-ratio-buttons button');
+                buttons.forEach(btn => {
+                    btn.classList.remove('selected');
+                    if (btn.dataset.aspect === 'original') {
+                        btn.classList.add('selected');
+                    }
+                });
+
+                // 顯示模態框
+                modal.style.display = 'flex'; // 使用 flex 讓它置中
+                setTimeout(() => modal.classList.add('show'), 10); // 添加 show 類別以觸發動畫
             };
             
-            // 讀取檔案內容為 Data URL (Base64 編碼)
             reader.readAsDataURL(file); 
-            
-            // 提示使用者
-            alert(`檔案 "${file.name}" 已成功上傳並暫存！`);
         }
+
+        // 選擇比例按鈕的點擊事件
+        document.querySelector('.aspect-ratio-buttons').addEventListener('click', function(event) {
+            if (event.target.tagName === 'BUTTON') {
+                const selectedButton = event.target;
+                const buttons = this.querySelectorAll('button');
+                buttons.forEach(btn => btn.classList.remove('selected')); // 移除所有選中狀態
+                selectedButton.classList.add('selected'); // 為點擊的按鈕添加選中狀態
+                currentSelectedAspect = selectedButton.dataset.aspect; // 更新選擇的比例
+            }
+        });
+
+        // 確定按鈕的點擊事件
+        function confirmAspectRatio() {
+            if (currentUploadedImage) {
+                // 將圖片添加到圖庫，並傳入選擇的比例類別
+                addImageToGallery(currentUploadedImage, '上傳圖片', `aspect-${currentSelectedAspect}`);
+                alert('圖片已上傳並顯示！');
+            }
+            hideModal();
+            currentUploadedImage = null; // 清除已上傳圖片的 Data URL
+        }
+
+        // 取消按鈕的點擊事件
+        function cancelAspectRatio() {
+            hideModal();
+            currentUploadedImage = null; // 清除已上傳圖片的 Data URL (如果取消則不添加到圖庫)
+            alert('圖片上傳已取消！');
+        }
+
+        // 隱藏模態框
+        function hideModal() {
+            const modal = document.getElementById('aspectRatioModal');
+            modal.classList.remove('show'); // 移除 show 類別以觸發動畫
+            setTimeout(() => {
+                modal.style.display = 'none'; // 動畫結束後隱藏
+                document.getElementById('upload-input').value = ''; // 清空檔案選擇，以便再次上傳同一個檔案
+            }, 300); // 等待動畫完成
+        }
+
+        // 點擊模態框外部也關閉 (可選)
+        document.getElementById('aspectRatioModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                cancelAspectRatio();
+            }
+        });
     </script>
 
 </body>
