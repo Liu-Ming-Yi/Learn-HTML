@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>夜空網頁程式碼分析</title>
+    <style>
+        /* 基本樣式 */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6; /* 輕盈的背景色 */
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #3498db;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2c3e50;
+            border-left: 5px solid #e74c3c;
+            padding-left: 10px;
+        }
+        .section {
+            background-color: #ffffff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #34495e;
+            color: white;
+        }
+        code {
+            background-color: #ecf0f1;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            color: #e74c3c;
+        }
+        .code-block {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🚀 原始夜空網頁程式碼分析</h1>
+    <p>這個網頁對一個具有夜空、星星和月亮視覺效果的 HTML/CSS 檔案進行了詳細解析。</p>
+
+    <div class="section">
+        <h2>🛠️ 程式碼使用的技術 (Technology Used)</h2>
+        <p>這個網頁是純粹的靜態設計，主要使用了以下兩種核心技術：</p>
+        <table>
+            <tr><th>技術</th><th>用途</th><th>說明</th></tr>
+            <tr><td><strong>HTML</strong></td><td>結構 (Structure)</td><td>定義網頁內容的骨架，例如標題、容器等。</td></tr>
+            <tr><td><strong>CSS</strong></td><td>樣式與動畫 (Styling & Animation)</td><td>負責所有視覺效果，包括背景漸變、元素定位、星星閃爍動畫。</td></tr>
+            <tr><td><strong>JavaScript (JS)</strong></td><td><em>未使用</em></td><td>該網頁沒有使用 JS 來處理複雜的互動邏輯。</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>🏷️ HTML 標籤解析 (HTML Tags Analysis)</h2>
+
+        <h3>結構與元數據標籤</h3>
+        <table>
+            <tr><th>標籤</th><th>語法範例</th><th>用途說明</th></tr>
+            <tr><td><code>&lt;!DOCTYPE html&gt;</code></td><td><code>&lt;!DOCTYPE html&gt;</code></td><td>宣告文件為 HTML5 標準。</td></tr>
+            <tr><td><code>&lt;html&gt;</code></td><td><code>&lt;html lang="zh-TW"&gt;</code></td><td>根元素，包含所有內容。</td></tr>
+            <tr><td><code>&lt;head&gt;</code></td><td><code>&lt;head&gt;...&lt;/head&gt;</code></td><td>包含網頁的不可見資訊（元數據）。</td></tr>
+            <tr><td><code>&lt;body&gt;</code></td><td><code>&lt;body&gt;...&lt;/body&gt;</code></td><td>包含網頁的所有可見內容。</td></tr>
+            <tr><td><code>&lt;meta&gt;</code></td><td><code>&lt;meta charset="UTF-8"&gt;</code></td><td>設定字符編碼，防止亂碼。</td></tr>
+            <tr><td><code>&lt;title&gt;</code></td><td><code>&lt;title&gt;你好&lt;/title&gt;</code></td><td>設定瀏覽器標籤頁上的標題。</td></tr>
+            <tr><td><code>&lt;style&gt;</code></td><td><code>&lt;style&gt;...&lt;/style&gt;</code></td><td>嵌入 CSS 樣式程式碼。</td></tr>
+        </table>
+
+        <h3>內容與容器標籤</h3>
+        <table>
+            <tr><th>標籤</th><th>語法範例</th><th>用途說明</th></tr>
+            <tr><td><code>&lt;h1&gt;</code></td><td><code>&lt;h1&gt;Hello World&lt;/h1&gt;</code></td><td>定義主標題，是頁面上顯示的核心文字。</td></tr>
+            <tr><td><code>&lt;div&gt;</code></td><td><code>&lt;div class="moon"&gt;</code></td><td>通用的區塊容器。在原始碼中用於創建 **月亮**、**星星層** (`stars`) 和 **星星陣列** (`star-field`)。</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>🎨 關鍵 CSS 樣式與技巧 (Key CSS Techniques)</h2>
+
+        <h3>1. 夜空背景的實現</h3>
+        <p>使用了徑向漸變 (<code>radial-gradient</code>) 創造了由深到淺的星空效果：</p>
+        <div class="code-block">
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+        </div>
+
+        <h3>2. 星星的生成與動畫</h3>
+        <p>這是最巧妙的部分。程式碼沒有使用數百個 <code>&lt;div&gt;</code>，而是利用單一 <code>.star-field</code> 元素的 **多重 <code>box-shadow</code>** 來模擬大量隨機位置的星星。</p>
+        <div class="code-block">
+            /* 節錄 box-shadow 語法，每個座標代表一顆星星 */<br>
+            box-shadow: 10vw 10vh #fff, 20vw 30vh #fff, ...;
+        </div>
+        <p>星星的閃爍 (Twinkle) 是透過 CSS 關鍵幀動畫 (<code>@keyframes</code>) 實現的：</p>
+        <div class="code-block">
+            @keyframes twinkle {<br>
+            &nbsp;&nbsp;0% { opacity: 0.5; }<br>
+            &nbsp;&nbsp;100% { opacity: 1; }<br>
+            }<br>
+            <br>
+            animation: twinkle 3s infinite alternate; /* 應用動畫 */
+        </div>
+
+        <h3>3. 標題與月亮的光暈</h3>
+        <p>利用 **多重陰影** 創造發光效果，使標題和月亮在夜空中更加突出。</p>
+        <ul>
+            <li>**標題光暈 (Text Glow):** <code>text-shadow: 0 0 10px #fff, 0 0 20px #00f, ...;</code></li>
+            <li>**月亮光暈 (Moon Glow):** <code>box-shadow: 0 0 10px #fff, 0 0 20px #f9f9f9;</code></li>
+            <li>月亮上的陰影是透過 **偽元素** <code>.moon::after</code> 製作的。</li>
+        </ul>
+    </div>
+
+</body>
+</html>
