@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>你好</title>
+    <style>
+        /* 全域設定與背景 */
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            color: white; 
+            font-family: Arial, sans-serif;
+            overflow: hidden; 
+            /* 深藍色夜空背景 */
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+        }
+
+        /* 標題樣式 */
+        h1 {
+            z-index: 10; 
+            font-size: 3em;
+            text-shadow: 0 0 10px #fff, 0 0 20px #00f, 0 0 30px #00f; 
+        }
+
+        /* 星星的生成與動畫 */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; 
+        }
+
+        /* 函數用於生成隨機位置的星星 (使用 box-shadow) */
+        .star-field {
+            width: 1px;
+            height: 1px;
+            background: transparent;
+            box-shadow: 
+                /* 隨機位置和顏色的星星 (x y 模糊 顏色) */
+                10vw 10vh #fff, 20vw 30vh #fff, 45vw 15vh #fff, 60vw 80vh #fff, 75vw 50vh #fff, 90vw 25vh #fff, 
+                5vw 90vh #fff, 30vw 55vh #fff, 70vw 5vh #fff, 85vw 75vh #fff, 15vw 40vh #fff, 50vw 95vh #fff,
+                /* 更多星星... */
+                10vw 60vh #fff, 40vw 25vh #fff, 80vw 35vh #fff, 25vw 85vh #fff, 55vw 5vh #fff, 95vw 10vh #fff; 
+            /* 讓星星閃爍 */
+            animation: twinkle 3s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* 月亮樣式 */
+        .moon {
+            position: fixed;
+            top: 5vh; 
+            right: 5vw; 
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #f0f0f0; 
+            box-shadow: 0 0 10px #fff, 0 0 20px #f9f9f9; 
+            z-index: 5;
+        }
+        
+        /* 月亮上的陰影/紋理（簡單示範） */
+        .moon::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #ccc;
+            opacity: 0.6;
+            transform: rotate(45deg);
+        }
+
+        /* 【新增】GitHub 連結樣式 */
+        .github-link {
+            position: fixed; /* 固定在視口 */
+            bottom: 20px;    /* 距離底部 20px */
+            right: 20px;     /* 距離右側 20px */
+            z-index: 20;     /* 確保在所有元素之上 */
+        }
+
+        .github-link a {
+            display: block; /* 讓連結佔滿容器 */
+            padding: 10px 15px;
+            text-decoration: none; /* 移除底線 */
+            font-weight: bold;
+            border-radius: 8px;
+            
+            /* 顯眼的顏色：使用一個亮眼的霓虹黃色 */
+            background-color: #ffd700; /* 金色/黃色背景 */
+            color: #1B2735; /* 深色文字 */
+            
+            /* 增加光暈效果讓它更顯眼 */
+            box-shadow: 0 0 10px #ffd700, 0 0 20px rgba(255, 215, 0, 0.7);
+            
+            /* 滑鼠懸停效果 */
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .github-link a:hover {
+            background-color: #ffaa00; /* 滑鼠經過時變深 */
+            transform: scale(1.05); /* 輕微放大 */
+        }
+    </style>
+</head>
+<body>
+    <h1>Hello World</h1>
+
+    <div class="moon"></div>
+
+    <div class="stars">
+        <div class="star-field"></div>
+    </div>
+    
+    <div class="github-link">
+        <a href="https://github.com/Liu-Ming-Yi/Web-Design">
+            查看 GitHub 專案
+        </a>
+    </div>
+
+</body>
+</html>
