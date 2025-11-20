@@ -16,8 +16,8 @@
 
 | 檔案名稱 / 範例 | 內容簡述 | 使用&查詢的工具 |
 | :---: | :------ | :----: |
-| [Index.html](https://liu-ming-yi.github.io/Learn-HTML/Web-Design-1/Index.html)| [使用語法說明](https://liu-ming-yi.github.io/Learn-HTML/Web-Design-1/Introduction-to-tag-syntax.html) | [AI：Gemini]<br>[Refer：Google]<br>[Idea：Owner] |
-| [Index.html](https://liu-ming-yi.github.io/Learn-HTML/Web-Images-Design-2/Index.html)| 基礎 `HTML` 結構與 `<img> <title>` 語法 和 `width 和 height` 屬性 | [AI：Gemini]<br>[Idea：Owner] |
+| [Index.html](https://liu-ming-yi.github.io/Learn-HTML/Web-Design-1/Index.html)<br>Hello World| [使用語法說明](https://liu-ming-yi.github.io/Learn-HTML/Web-Design-1/Introduction-to-tag-syntax.html) | [AI：Gemini]<br>[Refer：Google]<br>[Idea：Owner] |
+| [Index.html](https://liu-ming-yi.github.io/Learn-HTML/Web-Images-Design-2/Index.html)<br>上傳一張圖片| 基礎 `HTML` 結構與 `<img> <title>` 語法 和 `width 和 height` 屬性 | [AI：Gemini]<br>[Idea：Owner] |
 | [color-change.html](https://liu-ming-yi.github.io/First-code/CSS/color-change.html)| 基礎 `HTML` 結構與 `CSS` 語法 和 `color: red;` 屬性 <br> HTML 對對符號非常嚴格`(例如 style="color: red;" 引號、冒號、分號)`<br>使用 style 屬性設定顏色是最快的方式，請確保所有標籤都是成對的!| [AI：Gemini]<br>[Refer：Google]<br>[Refer：Github] |
 | [Interactive.html](https://liu-ming-yi.github.io/First-code/JavaScript/Interactive.html)| 基礎 `HTML` 結構與 `<JavaScript>` 語法 #小遊戲٩(๑•̀ω•́๑)۶ | [AI：Gemini] |
 | [phone.json](https://liu-ming-yi.github.io/First-code/Json/phone.json)| 基礎 `JSON` 結構和語法<br>必須使用雙引號 `(")` 包裹。`例如："編號"`<br>鍵和值之間使用冒號 `(:)` 分隔。`例如："編號": "1"`<br>每個物件的最後一個鍵值對或陣列的最後一個元素後面不能有逗號 | [AI：Gemini] |
