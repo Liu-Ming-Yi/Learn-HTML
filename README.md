@@ -1,2 +1,2 @@
 # 此功能還在開發中敬請期待
-<img width="500" height="20" alt="image" src="https://github.com/user-attachments/assets/70526f93-a7fe-4fc8-9c25-aa576bb8b218" />
+<img src="https://truth.bahamut.com.tw/s01/201109/b2e65458d3d5fcf31a1cdc461ce289ae.GIF" alt="巴哈姆特 GIF 圖片" width="300" />
