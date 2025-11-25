@@ -35,13 +35,13 @@
             z-index: -1;
         }
 
-        /* 單顆星星的樣式 */
+        /* 單顆背景星星樣式 (已優化為無限循環) */
         .star {
             position: absolute;
             background: white;
             border-radius: 50%;
             opacity: 0;
-            animation-iteration-count: 1;
+            animation-iteration-count: infinite; /* 無限循環，不需 JS 重生 */
             animation-timing-function: ease-in-out;
         }
 
@@ -53,7 +53,7 @@
         }
 
         /* ------------------------------------------- */
-        /* ✨ 新增的流星特效樣式 (CSS) 開始 ✨ */
+        /* ✨ 流星特效樣式 (關鍵修改) ✨ */
         /* ------------------------------------------- */
         .shooting-star {
             position: absolute;
@@ -63,13 +63,14 @@
             height: 4px;
             background: #fff;
             border-radius: 50%;
-            /* 讓流星有一種發光拖尾的感覺 */
             box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1),
                         0 0 0 8px rgba(255, 255, 255, 0.1),
                         0 0 20px rgba(255, 255, 255, 1);
-            animation: shoot 3s linear infinite;
+            /* 讓動畫跑完一次就結束，以便 JS 偵測並重設位置 */
+            animation-iteration-count: 1; 
+            animation-timing-function: linear; 
             opacity: 0;
-            z-index: 1; /* 確保流星在背景星星上面 */
+            z-index: 1; 
         }
 
         /* 流星的長尾巴 */
@@ -78,7 +79,7 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 300px; /* 尾巴長度 */
+            width: 300px;
             height: 1px;
             background: linear-gradient(90deg, #fff, transparent);
         }
@@ -93,13 +94,10 @@
                 opacity: 1;
             }
             100% {
-                transform: rotate(315deg) translateX(-1500px); /* 飛行的距離 */
+                transform: rotate(315deg) translateX(-1500px);
                 opacity: 0;
             }
         }
-        /* ------------------------------------------- */
-        /* ✨ 新增的流星特效樣式 (CSS) 結束 ✨ */
-        /* ------------------------------------------- */
 
         /* 月亮樣式 */
         .moon {
@@ -155,7 +153,7 @@
 
     <script>
         // ----------------------------------------------------
-        // 🌟 原本的星星核心功能 🌟
+        // 🌟 背景星星功能 (效能優化版，只生成一次) 🌟
         // ----------------------------------------------------
 
         const container = document.getElementById('stars-container');
@@ -165,72 +163,78 @@
             const star = document.createElement('div');
             star.className = 'star';
 
-            // 1. 隨機位置
             const x = Math.random() * 100;
             const y = Math.random() * 100;
             star.style.left = `${x}vw`;
             star.style.top = `${y}vh`;
 
-            // 2. 隨機大小
             const size = Math.random() * 1.5 + 0.5;
             star.style.width = `${size}px`;
             star.style.height = `${size}px`;
 
-            // 3. 隨機動畫時長
             const duration = Math.random() * 3 + 1.5;
             star.style.animationDuration = `${duration}s`;
             
-            // 4. 隨機動畫延遲
             const delay = Math.random() * duration;
             star.style.animationDelay = `${delay}s`;
             
-            // 應用動畫
             star.style.animationName = 'twinkle';
-
-            // 5. 動畫結束後重生
-            star.addEventListener('animationend', function() {
-                star.remove();
-                createStar();
-            });
+            // 不再需要 animationend listener
 
             container.appendChild(star);
         }
 
-        // 首次啟動：生成所有背景星星
+        // 啟動：只生成 150 顆星星
         for (let i = 0; i < NUMBER_OF_STARS; i++) {
             createStar();
         }
 
         // ----------------------------------------------------
-        // ✨ 新增的流星功能 (JS) 開始 ✨
+        // ✨ 流星功能 (固定 4 顆，無限循環隨機出現 - 效能優化) ✨
         // ----------------------------------------------------
         
-        function createShootingStar() {
-            const shootingStar = document.createElement('div');
-            shootingStar.className = 'shooting-star';
-            
-            // 讓流星從右側隨機高度出現 (您可以根據喜好調整範圍)
-            shootingStar.style.top = (Math.random() * 50) + 'vh'; // 出現在上半部
-            shootingStar.style.left = (Math.random() * 50 + 50) + 'vw'; // 出現在右半部
-            
-            // 隨機動畫時間 (流星飛行的速度)
-            shootingStar.style.animationDuration = (Math.random() * 2 + 1) + 's';
+        const NUM_SHOOTING_STARS = 4; // 固定只需要 4 顆流星在 DOM 中循環
 
-            document.body.appendChild(shootingStar);
+        // 核心函式：重設一顆流星的位置和速度，並重啟動畫
+        function resetShootingStar(starElement) {
+            // 1. 清除舊動畫，讓瀏覽器準備重新開始
+            starElement.style.animationName = 'none';
+            // 關鍵步驟：強制瀏覽器重繪，才能讓動畫重新開始
+            starElement.offsetHeight; 
 
-            // 動畫結束後移除這個流星 DOM 元素，避免佔用記憶體
-            shootingStar.addEventListener('animationend', () => {
-                shootingStar.remove();
-            });
+            // 2. 設置新的隨機位置 (從右上方往左下方飛)
+            starElement.style.top = (Math.random() * 50) + 'vh'; 
+            starElement.style.left = (Math.random() * 50 + 50) + 'vw'; 
+            
+            // 3. 設置新的隨機速度/時長
+            const duration = Math.random() * 2 + 1; // 速度在 1.0s 到 3.0s 之間
+            starElement.style.animationDuration = `${duration}s`;
+
+            // 4. 重啟動畫
+            starElement.style.animationName = 'shoot';
         }
 
-        // 設定定時器：每 4000 毫秒 (4秒) 嘗試生成一顆流星
-        // 你可以把 4000 改小一點(例如 2000) 讓流星變多，或改大一點(例如 8000) 讓它變稀有
-        setInterval(createShootingStar, 4000);
+        // 初始化：建立固定的 4 顆流星元素
+        for (let i = 0; i < NUM_SHOOTING_STARS; i++) {
+            const shootingStar = document.createElement('div');
+            shootingStar.className = 'shooting-star';
 
-        // ----------------------------------------------------
-        // ✨ 新增的流星功能 (JS) 結束 ✨
-        // ----------------------------------------------------
+            // 讓流星錯開出現，避免 4 顆同時劃過
+            const initialDelay = i * 1.5; // 每顆延遲 1.5 秒
+            shootingStar.style.animationDelay = `${initialDelay}s`;
+            
+            // 設置監聽器：當動畫結束時，立即重設它的位置並重新開始動畫
+            shootingStar.addEventListener('animationend', function() {
+                resetShootingStar(this);
+            });
+
+            document.body.appendChild(shootingStar);
+            
+            // 第一次啟動
+            resetShootingStar(shootingStar);
+        }
+
+        // ⚠️ 這裡已移除所有的 setInterval，實現穩定且低負載的循環效果。
 
     </script>
 </body>
