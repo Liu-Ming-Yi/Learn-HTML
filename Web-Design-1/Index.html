@@ -1,321 +1,237 @@
 <!DOCTYPE html>
-
 <html lang="zh-TW">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>星空</title>
-
     <style>
-
         /* 全域設定與背景 */
-
         body {
-
             margin: 0;
-
             height: 100vh;
-
             display: flex;
-
             justify-content: center;
-
             align-items: center;
-
             color: white;
-
             font-family: Arial, sans-serif;
-
             overflow: hidden;
-
             background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
-
         }
-
-
 
         /* 標題樣式 */
-
         h1 {
-
             z-index: 10;
-
             font-size: 3em;
-
             text-shadow: 0 0 10px #fff, 0 0 20px #00f, 0 0 30px #00f;
-
         }
-
-
 
         /* 星星的生成與動畫 */
-
         .stars {
-
             position: fixed;
-
             top: 0;
-
             left: 0;
-
             width: 100%;
-
             height: 100%;
-
             z-index: -1;
-
         }
-
-
 
         /* 單顆星星的樣式 */
-
         .star {
-
             position: absolute;
-
             background: white;
-
             border-radius: 50%;
-
-            /* 讓星星開始時隱藏 */
-
             opacity: 0;
-
-            /* 初始設置為 0，等待 JS 設置延遲和時長 */
-
-            animation-iteration-count: 1; /* 只播放一次，然後重生 */
-
-            animation-timing-function: ease-in-out; /* 柔和的變化 */
-
+            animation-iteration-count: 1;
+            animation-timing-function: ease-in-out;
         }
 
-       
-
-        /* 🌟 修正後的閃爍動畫：變亮 -> 變暗 🌟 */
-
+        /* 星星閃爍動畫 */
         @keyframes twinkle {
-
             0% { opacity: 0; }
-
-            50% { opacity: 1; /* 中間最亮 */ }
-
+            50% { opacity: 1; }
             100% { opacity: 0; }
-
         }
 
-
-
-        /* 月亮樣式 (保持不變) */
-
-        .moon {
-
-            position: fixed;
-
-            top: 5vh;
-
-            right: 5vw;
-
-            width: 80px;
-
-            height: 80px;
-
+        /* ------------------------------------------- */
+        /* ✨ 新增的流星特效樣式 (CSS) 開始 ✨ */
+        /* ------------------------------------------- */
+        .shooting-star {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            background: #fff;
             border-radius: 50%;
-
-            background: #f0f0f0;
-
-            box-shadow: 0 0 10px #fff, 0 0 20px #f9f9f9;
-
-            z-index: 5;
-
+            /* 讓流星有一種發光拖尾的感覺 */
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1),
+                        0 0 0 8px rgba(255, 255, 255, 0.1),
+                        0 0 20px rgba(255, 255, 255, 1);
+            animation: shoot 3s linear infinite;
+            opacity: 0;
+            z-index: 1; /* 確保流星在背景星星上面 */
         }
 
+        /* 流星的長尾巴 */
+        .shooting-star::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 300px; /* 尾巴長度 */
+            height: 1px;
+            background: linear-gradient(90deg, #fff, transparent);
+        }
 
+        /* 流星劃過的動畫：旋轉並位移 */
+        @keyframes shoot {
+            0% {
+                transform: rotate(315deg) translateX(0);
+                opacity: 1;
+            }
+            70% {
+                opacity: 1;
+            }
+            100% {
+                transform: rotate(315deg) translateX(-1500px); /* 飛行的距離 */
+                opacity: 0;
+            }
+        }
+        /* ------------------------------------------- */
+        /* ✨ 新增的流星特效樣式 (CSS) 結束 ✨ */
+        /* ------------------------------------------- */
 
-        /* GitHub 連結樣式 (保持不變) */
-
-        .github-link {
-
+        /* 月亮樣式 */
+        .moon {
             position: fixed;
-
-            bottom: 20px;
-
-            right: 20px;
-
-            z-index: 20;
-
+            top: 5vh;
+            right: 5vw;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            box-shadow: 0 0 10px #fff, 0 0 20px #f9f9f9;
+            z-index: 5;
         }
 
-
+        /* GitHub 連結樣式 */
+        .github-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 20;
+        }
 
         .github-link a {
-
             display: block;
-
             padding: 10px 15px;
-
             text-decoration: none;
-
             font-weight: bold;
-
             border-radius: 8px;
-
             background-color: #ffd700;
-
             color: #1B2735;
-
             box-shadow: 0 0 10px #ffd700, 0 0 20px rgba(255, 215, 0, 0.7);
-
             transition: background-color 0.3s, transform 0.3s;
-
         }
-
-
 
         .github-link a:hover {
-
             background-color: #ffaa00;
-
             transform: scale(1.05);
-
         }
-
     </style>
-
 </head>
-
 <body>
-
     <h1>Hello World</h1>
-
-
 
     <div class="moon"></div>
 
-
-
-    <div class="stars" id="stars-container">
-
-        </div>
-
-   
-
+    <div class="stars" id="stars-container"></div>
+    
     <div class="github-link">
-
         <a href="https://liu-ming-yi.github.io/Learn-HTML/" target="_blank">
-
             返回 GitHub 專案
-
         </a>
-
     </div>
 
-
-
     <script>
-
         // ----------------------------------------------------
-
-        // 🌟 核心功能：隨機生成、閃爍，並在動畫結束後重生 🌟
-
+        // 🌟 原本的星星核心功能 🌟
         // ----------------------------------------------------
-
-
 
         const container = document.getElementById('stars-container');
-
         const NUMBER_OF_STARS = 150;
 
-
-
         function createStar() {
-
             const star = document.createElement('div');
-
             star.className = 'star';
 
-
-
             // 1. 隨機位置
-
             const x = Math.random() * 100;
-
             const y = Math.random() * 100;
-
             star.style.left = `${x}vw`;
-
             star.style.top = `${y}vh`;
 
-
-
-            // 2. 隨機大小 (0.5px 到 2.0px)
-
+            // 2. 隨機大小
             const size = Math.random() * 1.5 + 0.5;
-
             star.style.width = `${size}px`;
-
             star.style.height = `${size}px`;
 
-
-
-            // 3. 隨機動畫時長 (1.5秒到 4.5秒，決定了變亮變暗的速度)
-
+            // 3. 隨機動畫時長
             const duration = Math.random() * 3 + 1.5;
-
             star.style.animationDuration = `${duration}s`;
-
-           
-
-            // 4. 隨機動畫延遲 (讓星星錯開閃爍的起始點)
-
+            
+            // 4. 隨機動畫延遲
             const delay = Math.random() * duration;
-
             star.style.animationDelay = `${delay}s`;
-
-           
-
+            
             // 應用動畫
-
             star.style.animationName = 'twinkle';
 
-
-
-            // 5. 監聽動畫結束事件，然後刪除並重新生成
-
+            // 5. 動畫結束後重生
             star.addEventListener('animationend', function() {
-
-                // 刪除舊星星
-
                 star.remove();
-
-                // 創建一個新的星星，實現「在其他地方重複動作」
-
                 createStar();
-
             });
 
-
-
             container.appendChild(star);
-
         }
 
-
-
-        // 首次啟動：生成所有星星
-
+        // 首次啟動：生成所有背景星星
         for (let i = 0; i < NUMBER_OF_STARS; i++) {
-
             createStar();
-
         }
+
+        // ----------------------------------------------------
+        // ✨ 新增的流星功能 (JS) 開始 ✨
+        // ----------------------------------------------------
+        
+        function createShootingStar() {
+            const shootingStar = document.createElement('div');
+            shootingStar.className = 'shooting-star';
+            
+            // 讓流星從右側隨機高度出現 (您可以根據喜好調整範圍)
+            shootingStar.style.top = (Math.random() * 50) + 'vh'; // 出現在上半部
+            shootingStar.style.left = (Math.random() * 50 + 50) + 'vw'; // 出現在右半部
+            
+            // 隨機動畫時間 (流星飛行的速度)
+            shootingStar.style.animationDuration = (Math.random() * 2 + 1) + 's';
+
+            document.body.appendChild(shootingStar);
+
+            // 動畫結束後移除這個流星 DOM 元素，避免佔用記憶體
+            shootingStar.addEventListener('animationend', () => {
+                shootingStar.remove();
+            });
+        }
+
+        // 設定定時器：每 4000 毫秒 (4秒) 嘗試生成一顆流星
+        // 你可以把 4000 改小一點(例如 2000) 讓流星變多，或改大一點(例如 8000) 讓它變稀有
+        setInterval(createShootingStar, 4000);
+
+        // ----------------------------------------------------
+        // ✨ 新增的流星功能 (JS) 結束 ✨
+        // ----------------------------------------------------
 
     </script>
-
 </body>
-
 </html>
