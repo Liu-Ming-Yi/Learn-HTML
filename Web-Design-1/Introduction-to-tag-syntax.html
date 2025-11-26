@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>語法解說</title>
+    <title>解說與分析</title>
     <style>
-        /* 基本樣式 */
+        /* 基本樣式 - 保持您的設計 */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             margin: 0;
             padding: 20px;
-            background-color: #f4f7f6; /* 輕盈的背景色 */
+            background-color: #f4f7f6;
             color: #333;
         }
         h1 {
@@ -64,20 +64,28 @@
             overflow-x: auto;
             margin-top: 10px;
         }
+        /* 新增：強調 JS 區塊的顏色 */
+        .js-section h2 {
+            color: #f39c12; /* 橘色 */
+        }
+        .js-section h3 {
+             border-left-color: #f39c12;
+        }
     </style>
 </head>
 <body>
 
-    <h1>⭐ 程式碼分析</h1>
-    <p>這個網頁對一個具有夜空、星星和月亮視覺效果的 HTML/CSS 檔案進行了詳細解析。</p>
+    <h1>⭐ 星空網頁程式碼分析</h1>
+    <p>這個網頁對一個具有夜空、星星、月亮和流星視覺效果的 HTML/CSS/JavaScript 檔案進行了詳細解析。</p>
 
     <div class="section">
         <h2>🛠️ 程式碼使用的語法 (Technology Used)</h2>
-        <p>這個網頁主要使用了以下兩種核心：</p>
+        <p>這個網頁使用了以下三種核心技術：</p>
         <table>
             <tr><th>語法</th><th>用途</th><th>說明</th></tr>
-            <tr><td><strong>HTML</strong></td><td>結構 (Structure)</td><td>定義網頁內容的框架，例如標題、內容等。</td></tr>
-            <tr><td><strong>CSS</strong></td><td>特效與動畫 (Styling & Animation)</td><td>負責所有視覺效果，包括背景漸層、月亮閃爍等。</td></tr>
+            <tr><td><strong>HTML</strong></td><td>結構 (Structure)</td><td>定義網頁內容的框架 (如標題、容器)。</td></tr>
+            <tr><td><strong>CSS</strong></td><td>特效與樣式 (Styling & Animation)</td><td>負責所有視覺效果，包括背景漸層、月亮樣式、星星和流星的動畫定義。</td></tr>
+            <tr><td><strong>JavaScript (JS)</strong></td><td>行為與動態 (Behavior & Dynamic Control)</td><td>負責在網頁中 動態創建 數百顆星星，並 循環控制 流星的出現和軌跡。</td></tr>
         </table>
     </div>
 
@@ -87,20 +95,22 @@
         <h3>結構與元數據標籤</h3>
         <table>
             <tr><th>標籤</th><th>語法範例</th><th>用途說明</th></tr>
-            <tr><td><code>&lt;!DOCTYPE html&gt;</code></td><td><code>&lt;!DOCTYPE html&gt;</code></td><td>設定 HTML 的版本。</td></tr>
-            <tr><td><code>&lt;html&gt;</code></td><td><code>&lt;html lang="zh-TW"&gt;</code></td><td>設定網頁的語言。</td></tr>
-            <tr><td><code>&lt;head&gt;</code></td><td><code>&lt;head&gt;...&lt;/head&gt;</code></td><td>包含網頁的不可見資訊 (名稱、標題、關鍵字與一些meta元素等）。</td></tr>
-            <tr><td><code>&lt;body&gt;</code></td><td><code>&lt;body&gt;...&lt;/body&gt;</code></td><td>包含網頁的所有可見內容 (標題語法、超連結或目錄等)。</td></tr>
-            <tr><td><code>&lt;meta&gt;</code></td><td><code>&lt;meta charset="UTF-8"&gt;</code></td><td>設定字符編碼，防止變成亂碼。</td></tr>
-            <tr><td><code>&lt;title&gt;</code></td><td><code>&lt;title&gt;你好&lt;/title&gt;</code></td><td>設定瀏覽器標籤頁上的標題。</td></tr>
+            <tr><td><code>&lt;!DOCTYPE html&gt;</code></td><td><code>&lt;!DOCTYPE html&gt;</code></td><td>設定文件類型為 HTML5。</td></tr>
+            <tr><td><code>&lt;html&gt;</code></td><td><code>&lt;html lang="zh-TW"&gt;</code></td><td>網頁根元素，設定網頁的語言。</td></tr>
+            <tr><td><code>&lt;head&gt;</code></td><td><code>&lt;head&gt;...&lt;/head&gt;</code></td><td>包含網頁的不可見資訊 (標題、樣式、設定)。</td></tr>
+            <tr><td><code>&lt;body&gt;</code></td><td><code>&lt;body&gt;...&lt;/body&gt;</code></td><td>包含網頁的所有可見內容 (標題、星星容器、腳本)。</td></tr>
+            <tr><td><code>&lt;meta&gt;</code></td><td><code>&lt;meta charset="UTF-8"&gt;</code></td><td>設定字符編碼為 UTF-8，防止亂碼。</td></tr>
+            <tr><td><code>&lt;title&gt;</code></td><td><code>&lt;title&gt;星空&lt;/title&gt;</code></td><td>設定瀏覽器標籤頁上的標題。</td></tr>
             <tr><td><code>&lt;style&gt;</code></td><td><code>&lt;style&gt;...&lt;/style&gt;</code></td><td>嵌入 CSS 樣式程式碼。</td></tr>
+            <tr><td><code>&lt;script&gt;</code></td><td><code>&lt;script&gt;...&lt;/script&gt;</code></td><td>嵌入或執行 JavaScript 程式碼。</td></tr>
         </table>
 
-        <h3>主要的標籤</h3>
+        <h3>內容標籤</h3>
         <table>
             <tr><th>標籤</th><th>語法範例</th><th>用途說明</th></tr>
-            <tr><td><code>&lt;h1&gt;</code></td><td><code>&lt;h1&gt;Hello World&lt;/h1&gt;</code></td><td>定義主題，像是頁面上顯示的文字 Hello World。</td></tr>
-            <tr><td><code>&lt;div&gt;</code></td><td><code>&lt;div class="moon"&gt;</code></td><td>通用的區塊容器。在原始碼中用於創建 月亮、星星的動畫、星星的位置。</td></tr>
+            <tr><td><code>&lt;h1&gt;</code></td><td><code>&lt;h1&gt;Hello World&lt;/h1&gt;</code></td><td>頁面主標題。</td></tr>
+            <tr><td><code>&lt;div&gt;</code></td><td><code>&lt;div class="moon"&gt;</code></td><td>通用的區塊容器。 在程式碼中用於創建 月亮、星星容器、流星，是實現特效的主要骨架。</td></tr>
+            <tr><td><code>&lt;a&gt;</code></td><td><code>&lt;a href="..."&gt;...&lt;/a&gt;</code></td><td>超連結，用於底部的 GitHub 連結。</td></tr>
         </table>
     </div>
 
@@ -108,34 +118,76 @@
         <h2>🎨 關鍵 CSS 樣式與技巧 (Key CSS Techniques)</h2>
 
         <h3>1. 夜空背景的實現</h3>
-        <p>使用了徑向漸變 (<code>radial-gradient</code>) 創造了由深到淺的星空效果：</p>
+        <p>使用了徑向漸變 (<code>radial-gradient</code>) 創造了由深到淺的夜空效果：</p>
         <div class="code-block">
             background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
         </div>
 
-        <h3>2. 星星的生成與動畫</h3>
-        <p>這是最巧妙的部分。程式碼沒有使用數百個 <code>&lt;div&gt;</code>，而是利用單一 <code>.star-field</code> 元素的 **多重 <code>box-shadow</code>** 來模擬大量隨機位置的星星。</p>
+        <h3>2. 星星的閃爍動畫 (Twinkle)</h3>
+        <p>背景的靜態星星是通過 JavaScript 生成，並搭配 CSS 關鍵幀動畫 (<code>@keyframes</code>) 實現持續閃爍：</p>
         <div class="code-block">
-            /* 節錄 box-shadow 語法，每個座標代表一顆星星 */<br>
-            box-shadow: 10vw 10vh #fff, 20vw 30vh #fff, ...;
-        </div>
-        <p>星星的閃爍 (Twinkle) 是透過 CSS 關鍵幀動畫 (<code>@keyframes</code>) 實現的：</p>
-        <div class="code-block">
+            /* CSS 關鍵幀動畫定義 */<br>
             @keyframes twinkle {<br>
-            &nbsp;&nbsp;0% { opacity: 0.5; }<br>
-            &nbsp;&nbsp;100% { opacity: 1; }<br>
+            &nbsp;&nbsp;0% { opacity: 0; }<br>
+            &nbsp;&nbsp;50% { opacity: 1; }<br>
+            &nbsp;&nbsp;100% { opacity: 0; }<br>
             }<br>
             <br>
-            animation: twinkle 3s infinite alternate; /* 應用動畫 */
+            /* 在 .star 樣式中應用動畫並設定無限循環 */<br>
+            .star { animation-name: 'twinkle'; animation-iteration-count: infinite; }
         </div>
 
-        <h3>3. 標題與月亮的光暈</h3>
-        <p>利用 **多重陰影** 創造發光效果，使標題和月亮在夜空中更加突出。</p>
+        <h3>3. 流星劃過動畫 (Shooting Star)</h3>
+        <p>使用 <code>@keyframes shoot</code> 控制流星的 旋轉 和 位移：</p>
+        <div class="code-block">
+            @keyframes shoot {<br>
+            &nbsp;&nbsp;100% {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;transform: rotate(315deg) translateX(-1500px); /* 旋轉並移動很遠 */<br>
+            &nbsp;&nbsp;}<br>
+            }<br>
+            <br>
+            /* 尾巴是透過 ::before 偽元素搭配線性漸變 (linear-gradient) 製作 */<br>
+            .shooting-star::before { background: linear-gradient(90deg, #fff, transparent); }
+        </div>
+
+        <h3>4. 標題與月亮的光暈</h3>
+        <p>利用 多重陰影 創造發光效果：</p>
         <ul>
-            <li>**標題光暈 (Text Glow):** <code>text-shadow: 0 0 10px #fff, 0 0 20px #00f, ...;</code></li>
-            <li>**月亮光暈 (Moon Glow):** <code>box-shadow: 0 0 10px #fff, 0 0 20px #f9f9f9;</code></li>
-            <li>月亮上的陰影是透過 **偽元素** <code>.moon::after</code> 製作的。</li>
+            <li>標題光暈: <code>text-shadow: 0 0 10px #fff, 0 0 20px #00f, ...;</code></li>
+            <li>月亮光暈: <code>box-shadow: 0 0 10px #fff, 0 0 20px #f9f9f9;</code></li>
         </ul>
+    </div>
+    
+    <div class="section js-section">
+        <h2>💡 JavaScript 行為分析 (&lt;script&gt; 區塊)</h2>
+        <p>JS 在這個網頁中扮演了 動態生成 和 無限循環 的關鍵角色，實現了高效能的動畫效果。</p>
+        
+        <h3>1. 背景星星的動態生成</h3>
+        <p>JS 使用 <code>document.createElement('div')</code> 循環創建 150 個 <code>&lt;div class="star"&gt;</code> 元素，並為每個星星隨機設定屬性：</p>
+        <ul>
+            <li>隨機位置: 使用 <code>Math.random() * 100</code> 設置 <code>left</code> 和 <code>top</code> (以 <code>vw</code> / <code>vh</code> 為單位)。</li>
+            <li>隨機大小: 設置 <code>width</code> 和 <code>height</code>。</li>
+            <li>隨機動畫: 設置 <code>animationDuration</code> (速度) 和 <code>animationDelay</code> (錯開閃爍時間)。</li>
+        </ul>
+        <div class="code-block">
+            function createStar() { ... }<br>
+            for (let i = 0; i < NUMBER_OF_STARS; i++) {<br>
+            &nbsp;&nbsp;createStar(); // 循環創建 150 顆星星<br>
+            }
+        </div>
+
+        <h3>2. 流星的無限循環重啟 (Performance Optimization)</h3>
+        <p>為了實現流星不斷劃過，JS 採用了高效的 監聽動畫結束 做法：</p>
+        <ul>
+            <li>創建固定元素: 只創建 4 顆流星元素 (<code>NUM_SHOOTING_STARS = 4</code>)。</li>
+            <li>監聽結束: 每個流星元素監聽 <code>animationend</code> 事件。</li>
+            <li>重設並重啟: 當流星動畫結束時，立即呼叫 <code>resetShootingStar(this)</code> 函式，隨機設定新的起點和速度，並強制瀏覽器重繪 (<code>offsetHeight</code>)，從而重新啟動 CSS 劃過動畫。</li>
+        </ul>
+        <div class="code-block">
+            shootingStar.addEventListener('animationend', function() {<br>
+            &nbsp;&nbsp;resetShootingStar(this); // 動畫結束後立即重設並重啟<br>
+            });
+        </div>
     </div>
 
 </body>
