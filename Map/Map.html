@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>地圖與定位</title>
+    <title>測試用地圖</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 
     <style>
         /* 設定地圖佔滿整個螢幕 */
@@ -35,41 +36,108 @@
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
     <script>
+        // *** 全域變數：儲存目前的定位座標 ***
+        let currentLocation = null;
+        let destinationMarker = null; // 用來儲存目的地標記，方便移除舊的
+
         // 1. 初始化地圖
-        let map = L.map('map').setView([25.0330, 121.5654], 13); // 預設在台北
+        let map = L.map('map').setView([25.0330, 121.5654], 13); 
 
         // 2. 加入 OpenStreetMap 圖層
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
+        // --- 設定 Geocoder 搜尋控制項 ---
+        var geocoder = L.Control.Geocoder.nominatim();
+
+        var geocoderControl = L.Control.geocoder({
+            geocoder: geocoder,
+            placeholder: '輸入目的地 (例如: 台北101)', // 模糊搜尋就是靠這個功能
+            position: 'topright',
+            defaultMarkGeocode: false // 關閉預設標記，我們自己處理
+        }).on('markgeocode', function(e) {
+            // 這個事件在使用者從搜尋結果中選取一個地址/地標後觸發
+
+            if (!currentLocation) {
+                alert('請先等待您的定位成功，才能計算距離！');
+                return;
+            }
+            
+            // 1. 取得目的地座標和名稱
+            var destinationLocation = e.geocode.center;
+            var destinationName = e.geocode.name;
+
+            // 2. 計算距離 (Leaflet 的 .distanceTo() 會回傳公尺)
+            var distanceMeters = currentLocation.distanceTo(destinationLocation);
+            
+            // 3. 格式化距離顯示
+            var distanceText;
+            if (distanceMeters >= 1000) {
+                distanceText = (distanceMeters / 1000).toFixed(2) + ' 公里';
+            } else {
+                distanceText = distanceMeters.toFixed(0) + ' 公尺';
+            }
+            
+            // 4. 更新狀態訊息
+            document.getElementById('status-msg').innerText = 
+                `✅ 距離計算完成！到 ${destinationName} 的直線距離約為 ${distanceText}`;
+            
+            // 5. 移除舊的目的地標記，並新增新的標記
+            if (destinationMarker) {
+                map.removeLayer(destinationMarker);
+            }
+
+            destinationMarker = L.marker(destinationLocation, {
+                icon: L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                })
+            }).addTo(map)
+                .bindPopup(`<b>目的地: ${destinationName}</b><br>直線距離: ${distanceText}`)
+                .openPopup();
+                
+            // 6. 調整地圖視野，同時看到起點和終點
+            var bounds = L.latLngBounds(currentLocation, destinationLocation);
+            map.fitBounds(bounds, { padding: [50, 50] });
+        });
+        
         // --- 功能：定位您的目前位置 ---
         
         function onLocationFound(e) {
             var latlng = e.latlng;
-            var accuracy = Math.round(e.accuracy); // 取得原始誤差值，並四捨五入到整數
+            currentLocation = latlng; // 設定全域變數
             
-            // 由於誤差值在桌機上可能非常大，我們用一個較小的比例來視覺化圓圈
+            // 取得原始誤差值，並四捨五入到整數
+            var accuracy = Math.round(e.accuracy); 
+            
+            // 視覺誤差範圍 (將原始誤差除以 80，避免圈圈過大)
             var visualRadius = e.accuracy / 80; 
             
-            // ** 建立彈出視窗的文字內容 **
             var popupContent = `
                 <b>您目前的位置</b><br>
-                定位誤差約: ${accuracy} 公尺<br>
-                (IP 定位不準確)
+                定位誤差約: ${accuracy} 公尺
             `;
             
-            // 更新狀態文字
-            document.getElementById('status-msg').innerText = "✅ 定位成功！";
+            // 更新狀態文字並加入搜尋控制項
+            document.getElementById('status-msg').innerText = "✅ 定位成功！請在右上角搜尋目的地。";
             document.getElementById('status-msg').style.background = "rgba(0, 128, 0, 0.8)";
+            
+            // *** 關鍵：定位成功後，才將搜尋控制項加入地圖 ***
+            geocoderControl.addTo(map); 
 
-            // 標記您的位置 (藍色小圓點)，並顯示誤差值
+            // 標記您的位置 (藍色小圓點)
             L.marker(latlng).addTo(map)
                 .bindPopup(popupContent).openPopup();
 
-            // 畫出定位誤差範圍 (視覺縮小版)
+            // 畫出定位誤差範圍
             L.circle(latlng, visualRadius, {
                 color: 'blue',
                 fillColor: '#30a3f6',
@@ -83,7 +151,7 @@
 
         function onLocationError(e) {
             // 定位失敗時的處理
-            document.getElementById('status-msg').innerText = "❌ 定位失敗：" + e.message;
+            document.getElementById('status-msg').innerText = "❌ 定位失敗：" + e.message + " 請重新整理網頁。";
             document.getElementById('status-msg').style.background = "rgba(255, 0, 0, 0.8)";
         }
 
