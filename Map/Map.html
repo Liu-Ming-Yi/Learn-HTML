@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地圖與定位</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        /* 設定地圖佔滿整個螢幕 */
+        body { margin: 0; padding: 0; }
+        #map { width: 100%; height: 100vh; }
+        
+        /* 狀態訊息提示樣式 */
+        #status-msg {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            pointer-events: none; 
+        }
+    </style>
+</head>
+<body>
+
+    <div id="status-msg">正在請求定位...</div>
+
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // 1. 初始化地圖
+        let map = L.map('map').setView([25.0330, 121.5654], 13); // 預設在台北
+
+        // 2. 加入 OpenStreetMap 圖層
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // --- 功能：定位您的目前位置 ---
+        
+        function onLocationFound(e) {
+            var latlng = e.latlng;
+            var accuracy = Math.round(e.accuracy); // 取得原始誤差值，並四捨五入到整數
+            
+            // 由於誤差值在桌機上可能非常大，我們用一個較小的比例來視覺化圓圈
+            var visualRadius = e.accuracy / 80; 
+            
+            // ** 建立彈出視窗的文字內容 **
+            var popupContent = `
+                <b>您目前的位置</b><br>
+                定位誤差約: ${accuracy} 公尺<br>
+                (IP 定位不準確)
+            `;
+            
+            // 更新狀態文字
+            document.getElementById('status-msg').innerText = "✅ 定位成功！";
+            document.getElementById('status-msg').style.background = "rgba(0, 128, 0, 0.8)";
+
+            // 標記您的位置 (藍色小圓點)，並顯示誤差值
+            L.marker(latlng).addTo(map)
+                .bindPopup(popupContent).openPopup();
+
+            // 畫出定位誤差範圍 (視覺縮小版)
+            L.circle(latlng, visualRadius, {
+                color: 'blue',
+                fillColor: '#30a3f6',
+                fillOpacity: 0.05,
+                weight: 1
+            }).addTo(map);
+
+            // 將地圖中心移動到定位點
+            map.setView(latlng, 16);
+        }
+
+        function onLocationError(e) {
+            // 定位失敗時的處理
+            document.getElementById('status-msg').innerText = "❌ 定位失敗：" + e.message;
+            document.getElementById('status-msg').style.background = "rgba(255, 0, 0, 0.8)";
+        }
+
+        // 開始請求定位
+        map.locate({setView: true, maxZoom: 16, enableHighAccuracy: true});
+        map.on('locationfound', onLocationFound);
+        map.on('locationerror', onLocationError);
+    </script>
+</body>
+</html>
