@@ -1,0 +1,321 @@
+:root {
+    --primary: #ff9800;
+    --primary-light: #ffc107;
+    --bg-color: #fff9e6;
+    --card-bg: #ffffff;
+    --text-main: #333333;
+    --text-muted: #666666;
+    --border-color: #f0e0c0;
+    --danger: #e53935;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', 'Noto Sans TC', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    height: 100vh;
+    overflow: hidden;
+}
+
+.pos-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* 左側菜單區 */
+.menu-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    height: 100%;
+}
+
+.header {
+    margin-bottom: 20px;
+}
+
+.logo {
+    color: var(--primary);
+    font-size: 2rem;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-left: 5px;
+}
+
+.categories {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+/* 隱藏捲軸 */
+.categories::-webkit-scrollbar {
+    height: 6px;
+}
+.categories::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+
+.category-btn {
+    background-color: var(--card-bg);
+    border: 2px solid var(--primary-light);
+    color: var(--primary);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.category-btn:hover {
+    background-color: var(--primary-light);
+    color: white;
+}
+
+.category-btn.active {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.menu-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+    overflow-y: auto;
+    align-content: start;
+    padding-right: 5px;
+}
+
+.menu-grid::-webkit-scrollbar {
+    width: 6px;
+}
+.menu-grid::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+
+.menu-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 15px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    user-select: none;
+}
+
+.menu-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(255, 152, 0, 0.15);
+    border-color: var(--primary-light);
+}
+
+.menu-card:active {
+    transform: translateY(0);
+}
+
+.menu-card .name {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.menu-card .price {
+    color: var(--primary);
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: auto;
+}
+
+.badge-recommend {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--danger);
+    color: white;
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* 右側購物車 */
+.cart-section {
+    width: 350px;
+    background: var(--card-bg);
+    border-left: 2px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: -4px 0 15px rgba(0,0,0,0.05);
+}
+
+.cart-section h2 {
+    margin-bottom: 20px;
+    color: var(--primary);
+}
+
+.cart-items {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-right: 5px;
+}
+
+.cart-items::-webkit-scrollbar {
+    width: 6px;
+}
+.cart-items::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+
+.empty-cart-msg {
+    text-align: center;
+    color: var(--text-muted);
+    margin-top: 50px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed var(--border-color);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.item-price {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.item-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.qty-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--primary);
+    background: white;
+    color: var(--primary);
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.qty-btn:hover {
+    background: var(--primary-light);
+    color: white;
+}
+
+.cart-summary {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid var(--primary);
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.total-price {
+    color: var(--danger);
+    font-size: 1.5rem;
+}
+
+.checkout-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.checkout-btn:hover:not(:disabled) {
+    background: #e68a00;
+}
+
+.checkout-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* 響應式 */
+@media (max-width: 768px) {
+    body {
+        overflow: auto;
+    }
+    .pos-container {
+        flex-direction: column;
+        height: auto;
+    }
+    .cart-section {
+        width: 100%;
+        border-left: none;
+        border-top: 2px solid var(--border-color);
+        box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+        position: sticky;
+        bottom: 0;
+        z-index: 10;
+        max-height: 50vh;
+    }
+    .menu-section {
+        height: auto;
+        padding-bottom: 20px;
+    }
+}
