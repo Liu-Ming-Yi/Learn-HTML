@@ -1,1 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>美美早餐店 POS</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="pos-container">
+        <!-- 左側：菜單區 -->
+        <main class="menu-section">
+            <header class="header">
+                <h1 class="logo">🍳 美美早餐店</h1>
+                <p class="subtitle">Mei Mei Breakfast Shop</p>
+            </header>
+            
+            <nav class="categories" id="category-container">
+                <!-- 類別按鈕由 JS 生成 -->
+            </nav>
+
+            <div class="menu-grid" id="menu-grid">
+                <!-- 餐點卡片由 JS 生成 -->
+            </div>
+        </main>
+
+        <!-- 右側：購物車區 -->
+        <aside class="cart-section">
+            <h2>📝 點餐明細</h2>
+            <div class="cart-items" id="cart-items">
+                <!-- 購物車項目由 JS 生成 -->
+                <div class="empty-cart-msg">尚未點餐</div>
+            </div>
+            
+            <div class="cart-summary">
+                <div class="total-row">
+                    <span>總計金額</span>
+                    <span class="total-price" id="total-price">NT$ 0</span>
+                </div>
+                <button class="checkout-btn" id="checkout-btn" disabled>結帳</button>
+            </div>
+        </aside>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
 
